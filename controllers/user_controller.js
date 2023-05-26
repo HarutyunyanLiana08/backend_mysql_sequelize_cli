@@ -1,8 +1,10 @@
-const {Users} = require('../models')
+// const {Users} = require('../models')
 const {generateAccessToken} = require('../middleware/jwt_generate')
 const bcrypt = require('bcrypt')
 const nodemailer = require("nodemailer")
 const jwt = require("jsonwebtoken");
+const { Users } = require("./index");
+// const Users = require('../models/users');
 const SECRET = process.env.SECRET
 
 function get_users(req,res){
@@ -13,6 +15,48 @@ function get_users(req,res){
         res.status(500).json({error:err.message})
     })
 }
+// const getUserById = async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const user = await Users.findByPk(id);
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+//     res.json(user);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+function get_users_id(req, res){
+  const {id}=req.params
+  Users.findOne({where:{id}})
+  .then((users)=>{
+      res.status(201).json(users)
+  }).catch((err)=>{
+      res.status(500).json({error:err.message})
+  })
+}
+function post_users(req, res){
+  const {firstname, lastname, email, password, role}=req.body
+  Users.create({firstname, lastname, email, password, role})
+  .then((users)=>{
+      res.status(201).json(users)
+  }).catch((err)=>{
+      res.status(500).json({error:err.message})
+  })
+}
+
+function update_users(req, res){
+  const {firstname, lastname, email, password, role}=req.body
+  const {id}=req.params
+  Users.update({firstname: firstname, lastname: lastname, email: email, password:password, role: role}, {where:{id:id}})
+  .then((users)=>{
+      res.status(201).json(users)
+  }).catch((err)=>{
+      res.status(500).json({error:err.message})
+  })
+}
+
 function delete_users(req,res){
     const {id}=req.params
     Users.destroy({where:{id}})
@@ -25,7 +69,7 @@ function delete_users(req,res){
 
 
 async function user_register(req, res) {
-    const { first_name, last_name, email, password } = req.body;
+    const { firstname, lastname, email, password } = req.body;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     
     if (!emailRegex.test(email)) {
@@ -39,8 +83,8 @@ async function user_register(req, res) {
       const salt = await bcrypt.genSalt(10);
       const hashed_password = await bcrypt.hash(password, salt);
     
-      if (first_name !== "" && last_name !== "" && email !== "" && password !== "") {
-        const data = await Users.create({ first_name, last_name, email, password: hashed_password, role:"admin", is_verified:0});
+      if (firstname !== "" && lastname !== "" && email !== "" && password !== "") {
+        const data = await Users.create({ firstname, lastname, email, password: hashed_password, role:0, is_verified:0});
         let token = generateAccessToken(email, 0)
         send_mail(email, token)
         return res.status(201).json(data);
@@ -103,10 +147,10 @@ async function user_register(req, res) {
       
       res.send("Email verified");
     } catch (err) {
-      res.status(500).send("Error verifying email");
+      res.status(500).send("Error verifing email");
     }
   }
 
 module.exports={
-    get_users,  delete_users, user_register, user_login, verify
+    get_users, get_users_id,  post_users, update_users, delete_users, user_register, user_login, verify
 }

@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Users.belongsTo(models.Carts)
+      Users.hasMany(models.Orders)
+  
     }
   }
   Users.init({
@@ -20,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     role: DataTypes.INTEGER,
-    is_veryfied: DataTypes.BOOLEAN
+    is_verified: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Users',
