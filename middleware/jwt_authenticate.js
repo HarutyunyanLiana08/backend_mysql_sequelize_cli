@@ -26,13 +26,14 @@
 // }
 
 const jwt = require('jsonwebtoken');
+const { Users } = require('../controllers');
 require('dotenv').config();
 const SECRET = process.env.SECRET;
 
 function authenticateAdminToken(req, res, next) {
     const token = req.headers.authorization;
-
-    console.log(token);
+     const decodedtoken = jwt.verify(token,SECRET)
+    
     if (token == null){
         return res.sendStatus(401)
     } 
@@ -41,8 +42,8 @@ function authenticateAdminToken(req, res, next) {
       if (err) {
         return res.sendStatus(403)
       }
-        console.log(user);
-        if(user.username === "admin" && user.role === 1){
+    
+        if(decodedtoken.role === 1){
           next()
         } 
         else {
@@ -68,8 +69,7 @@ function authenticateAdminToken(req, res, next) {
       if (err) {
         return res.sendStatus(403)
       }
-        console.log(user);
-        if(user.username !== 'admin' && user.role === 0 ){
+        if(Users.role === 0 ){
           next()
         }
     })

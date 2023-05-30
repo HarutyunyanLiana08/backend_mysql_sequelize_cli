@@ -18,8 +18,7 @@ const getCategory = async (req, res) => {
    // create category
   const createCategory = (req, res) => {
     const category = {
-      name: req.body.name,
-      description: req.body.description
+      name: req.body.name
     };
 
     Categories.create(category)

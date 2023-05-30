@@ -84,7 +84,7 @@ async function user_register(req, res) {
       const hashed_password = await bcrypt.hash(password, salt);
     
       if (firstname !== "" && lastname !== "" && email !== "" && password !== "") {
-        const data = await Users.create({ firstname, lastname, email, password: hashed_password, role:0, is_verified:0});
+        const data = await Users.create({ firstname, lastname, email, password: hashed_password, role:1, is_verified:1});
         let token = generateAccessToken(email, 0)
         send_mail(email, token)
         return res.status(201).json(data);
@@ -103,7 +103,7 @@ async function user_register(req, res) {
     const validPassword = await bcrypt.compare(password, user.password)
     if(validPassword){
         const token = generateAccessToken(email, user.is_verified, user.id, user.role)
-        console.log(token)
+       
         res.send(JSON.stringify({status: "Logged in", jwt:token}))
     } else{
         return res.status(400).send("Invalid password")
