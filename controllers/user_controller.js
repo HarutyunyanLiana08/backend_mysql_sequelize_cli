@@ -115,7 +115,7 @@ async function user_register(req, res) {
         service: "Gmail",
         auth: {
             user: "harutyunyanliana08@gmail.com",
-            pass: "sqxdtzjyxsjfviym"
+            pass: ""
         }
     })
     
