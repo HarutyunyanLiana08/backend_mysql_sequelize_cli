@@ -4,8 +4,7 @@ const upload = require('../middleware/multer')
 
 // Get all products
 async function getAllProducts (req, res) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  
   try {
     // include:category
     const products = await Products.findAll();
