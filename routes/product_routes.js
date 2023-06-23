@@ -16,7 +16,7 @@ router.get('/product:id', productController.getProductById);
 router.post('/createproduct',jwt_authenticate.authenticateAdminToken, upload.single('image'),productController.createProduct);
 
 // Update an existing product by ID
-router.put('/updateproduct/:id',jwt_authenticate.authenticateAdminToken, productController.updateProduct);
+router.put('/updateproduct/:id',jwt_authenticate.authenticateAdminToken, upload.single('image'),productController.updateProduct);
 
 // Delete an existing product by ID
 router.delete('/deleteproduct/:id',jwt_authenticate.authenticateAdminToken,productController.deleteProduct);

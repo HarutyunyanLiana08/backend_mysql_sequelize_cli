@@ -85,28 +85,29 @@ async function user_register(req, res) {
     
       if (firstname !== "" && lastname !== "" && email !== "" && password !== "") {
         const data = await Users.create({ firstname, lastname, email, password: hashed_password, role:0, is_verified:0});
-        let token = generateAccessToken(email, 0)
-        send_mail(email, token)
-        return res.status(201).json(data);
+        // let token = generTokenateAccess(email, 0)
+        // send_mail(email, token)
+        return res.status(201).json({message:'Registration successful'});
       }
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: 'Registration failed' });
     }
   }
 
   async function user_login(req, res){
     const {email, password} = req.body
     const user = await Users.findOne({where:{email}})
+    console.log(user)
     if(!user){
-        return res.status(400).send("Email is not correct")
+        return res.status(400).json({message: "Invalid email or password"})
     }
     const validPassword = await bcrypt.compare(password, user.password)
     if(validPassword){
         const token = generateAccessToken(email, user.is_verified, user.id, user.role)
        
-        res.send(JSON.stringify({status: "Logged in", jwt:token}))
+        res.json({message: "Logged in", token: token})
     } else{
-        return res.status(400).send("Invalid password")
+        return res.status(400).json({message: "Invalid email or password"})
     }
   }
 

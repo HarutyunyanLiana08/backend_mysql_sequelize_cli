@@ -17,6 +17,7 @@ async function getAllProducts (req, res) {
 
 // Get a single product by ID
 async function getProductById (req, res) {
+  
   try {
     const product = await Products.findByPk(req.params.id);
     if (!product) {
@@ -29,18 +30,7 @@ async function getProductById (req, res) {
   }
 };
 
-// Create a new product
 
-// async function createProduct(req, res){
-//   const{name, price, description,quantity,categoryId   } =req.body
-//   const img = `uploads/${req.file.filename}`;
-//   const data = await Products.create({name, price, description, quantity, categoryId})
-  
-//   const imgUrl = `${req.protocol}://${req.hostname}:5000/${img}`;
-//   console.log(imgUrl)
-//       data.img = imgUrl;
-//       return res.status(201).json({ message: 'Product created', data });
-// }
 async function createProduct(req, res) {
   const { name, price,description,quantity, categoryId } = req.body;
 const image = req.file && req.file.path
@@ -89,13 +79,11 @@ function updateProduct(req, res) {
     if (err) {
       return res.status(500).json({ error: 'Error updating product' });
     }
-
-    
     const { id } = req.params;
     const { name, price, description, quantity, categoryId } = req.body;
-    const image = req.file; 
+    const image = req.file && req.file.path
 
-    Products.update({name, price, image,description,quantity,categoryId}, {where:{id:id}}).then((product)=>{
+    Products.update({name, price,image, description,quantity,categoryId}, {where:{id:id}}).then((product)=>{
               res.status(201).json(product)
          }).catch((err)=>{
              res.status(500).json({error:err.message})})
