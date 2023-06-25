@@ -1,10 +1,9 @@
-// const {Users} = require('../models')
+
 const {generateAccessToken} = require('../middleware/jwt_generate')
 const bcrypt = require('bcrypt')
 const nodemailer = require("nodemailer")
 const jwt = require("jsonwebtoken");
 const { Users } = require("./index");
-// const Users = require('../models/users');
 const SECRET = process.env.SECRET
 
 function get_users(req,res){
@@ -15,18 +14,7 @@ function get_users(req,res){
         res.status(500).json({error:err.message})
     })
 }
-// const getUserById = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const user = await Users.findByPk(id);
-//     if (!user) {
-//       return res.status(404).json({ error: 'User not found' });
-//     }
-//     res.json(user);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+
 function get_users_id(req, res){
   const {id}=req.params
   Users.findOne({where:{id}})
@@ -66,8 +54,6 @@ function delete_users(req,res){
         res.status(500).json({error:err.message})
     })
 }
-
-
 async function user_register(req, res) {
     const { firstname, lastname, email, password } = req.body;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -85,8 +71,8 @@ async function user_register(req, res) {
     
       if (firstname !== "" && lastname !== "" && email !== "" && password !== "") {
         const data = await Users.create({ firstname, lastname, email, password: hashed_password, role:0, is_verified:0});
-        // let token = generTokenateAccess(email, 0)
-        // send_mail(email, token)
+        let token = generTokenateAccess(email, 0)
+        send_mail(email, token)
         return res.status(201).json({message:'Registration successful'});
       }
     } catch (err) {

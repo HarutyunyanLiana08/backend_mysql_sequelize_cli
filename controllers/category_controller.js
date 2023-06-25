@@ -1,11 +1,6 @@
 const {Categories} = require('./index');
-
-
-
- // show category
 const getCategory = async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     try {
       const category = await Categories.findAll();
       res.json(category);
@@ -15,7 +10,7 @@ const getCategory = async (req, res) => {
     }
   };
 
-   // create category
+   
   const createCategory = (req, res) => {
     const category = {
       name: req.body.name
@@ -33,8 +28,6 @@ const getCategory = async (req, res) => {
       });
   };
 
-
-   // one category
   const getCategoryById = async (req, res) => {
     try {
       const category = await Categories.findByPk(req.params.id);
@@ -49,7 +42,7 @@ const getCategory = async (req, res) => {
     }
   };
 
-  // change category
+  
 const updateCategory = async (req, res) => {
     try {
       const { name} = req.body;
@@ -67,8 +60,6 @@ const updateCategory = async (req, res) => {
       res.status(500).json({ error: 'Server error' });
     }
   };
-
-  // delete category
   const deleteCategory = async (req, res) => {
     try {
       const rowsDeleted = await Categories.destroy({ where: { id: req.params.id } });
