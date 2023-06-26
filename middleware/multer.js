@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
     const uniqueId = uuid.v4();
     const extension = file.originalname.split(".").pop();
     cb(null, `${uniqueId}.${extension}`);
-    console.log( 'asdsfdsffdg'+ extension)
+    
   },
 });
 
