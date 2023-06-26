@@ -71,8 +71,8 @@ async function user_register(req, res) {
     
       if (firstname !== "" && lastname !== "" && email !== "" && password !== "") {
         const data = await Users.create({ firstname, lastname, email, password: hashed_password, role:0, is_verified:0});
-        let token = generTokenateAccess(email, 0)
-        send_mail(email, token)
+        // let token = generTokenateAccess(email, 0)
+        // send_mail(email, token)
         return res.status(201).json({message:'Registration successful'});
       }
     } catch (err) {
